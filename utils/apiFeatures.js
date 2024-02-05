@@ -1,3 +1,5 @@
+const { query } = require("express");
+
 class apiFeatures {
     constructor(queryStringObject,mongooseQuery){
         this.queryStringObject=queryStringObject;
@@ -49,15 +51,19 @@ class apiFeatures {
     }
 
 
-    search(){
+    search(modelName){
         if(this.queryStringObject.keyword){
-        
-            let query = {};
+            if(modelName=="product"){
+            let query ={};
             query.$or = [
                 { title: { $regex: this.queryStringObject.keyword, $options: 'i' } },
                 { description: { $regex: this.queryStringObject.keyword, $options: 'i' } },
               ];
             this.mongooseQuery=this.mongooseQuery.find(query)
+        }
+        else{
+            query= { name: { $regex: this.queryStringObject.keyword, $options: 'i' } }
+        }
         }
         return this ;
     }
@@ -80,10 +86,7 @@ class apiFeatures {
         this.paginationRedult=pagination
         
 
-        this.mongooseQuery=this.mongooseQuery.skip(skip).limit(limit).populate({
-            path:"categore",
-            select:"name -_id"
-        })
+        this.mongooseQuery=this.mongooseQuery.skip(skip).limit(limit)
         return this
     }
 

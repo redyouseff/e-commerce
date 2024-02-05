@@ -1,12 +1,24 @@
 const validator=require("../../middleware/validator")
-const { check } = require('express-validator');
+const { check,body } = require('express-validator');
+const slugify =require("slugify")
 const getCategoreValidator=[check("id").isMongoId().withMessage("invalid categore id"),validator
 
 ]
 
 const createCategoreValidator=[check("name").notEmpty().withMessage('required')
 .isLength({max:33}).withMessage("too long ")
-.isLength({min:3}).withMessage("too short ")
+.custom((val,{req})=>{
+    req.body.slug=slugify(val)
+    return true
+
+})
+
+
+.isLength({min:3}).withMessage("too short ").custom((val,{req})=>{
+    req.body.slug=slugify(val)
+    return true
+
+})
 ,
 validator
 
@@ -15,7 +27,14 @@ const deleteCategoreValidator=[check("id").isMongoId().withMessage("invalid cate
 
 ]
 const updateCategoreValidator=[
-    check("id").isMongoId().withMessage("invalid categore id"),validator
+    check("id").isMongoId().withMessage("invalid categore id"),
+    body("name").custom((val,{req})=>{
+        req.body.slug=slugify(val)
+        return true
+    
+    })
+
+    ,validator
 
 
 ]
