@@ -4,6 +4,11 @@ const slugify=require("slugify")
 const appError =require("../utils/apiError")
 const apiFeatures=require("../utils/apiFeatures")
 const factory=require("./handlersFactory")
+const {uploadSingleImage}=require("../middleware/uploadImage")
+
+const multer  = require('multer')
+const { v4: uuidv4 } = require('uuid');
+const sharp =require("sharp")
 
 const getBrand=factory.getAll(brandModel)
 
@@ -30,6 +35,23 @@ const getBrand=factory.getAll(brandModel)
 
 
 // })
+
+const uploadBrandImage=uploadSingleImage("image")
+const reasizeImage=asyncHandler( async (req,res,next)=>{
+   const fileName=`brand-${uuidv4()}-${Date.now()}.jpeg`
+   console.log(req.file.buffer)
+   sharp(req.file.buffer).resize(600,600)
+   .toFormat("jpeg")
+   .jpeg({quality:90})
+   .toFile(`uploads/brand/${fileName}`)
+   req.body.image=fileName;
+   next();
+
+
+
+
+})
+
 
 const createBrand=factory.createOne(brandModel)
 // const createBrand=asyncHandler( async(req,res)=>{
@@ -99,6 +121,9 @@ module.exports= {
    deleteBrand,
    getSpecificBrand,
    getBrand,
+   uploadBrandImage,
+   reasizeImage
+
 
 
 };

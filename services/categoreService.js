@@ -4,7 +4,59 @@ const slugify=require("slugify")
 const appError =require("../utils/apiError")
 const apiFeatures=require("../utils/apiFeatures")
 const factory=require("./handlersFactory")
+const {uploadSingleImage}=require("../middleware/uploadImage")
 
+
+
+const multer  = require('multer')
+const { v4: uuidv4 } = require('uuid');
+const sharp =require("sharp")
+
+
+
+// const multerStorage= multer.diskStorage({
+//     destination:(req,file,cb)=>{
+//         cb(null,"uploads/categore")       
+//     },
+//     filename:(req,file,cb)=>{
+       
+//         const ext=file.mimetype.split("/")[1]
+//         const filename =`categore-${uuidv4()}-${Date.now()}.${ext}`
+
+//         cb(null,filename)
+
+//     }
+// })
+
+// const multerStorage=multer.memoryStorage(); 
+
+// const multerFilter=(req,file,cb)=>{
+//      if(file.mimetype.startsWith("image")){
+//         cb(null,true)
+//     }
+//     else{
+//         cb(new appError("only imaged allowed",400),false)
+//     }
+// }
+
+// const upload=multer({ storage : multerStorage  ,fileFilter:multerFilter})
+
+const uploadCategoreImage=uploadSingleImage("image")
+
+const reasizeImage=asyncHandler( async (req,res,next)=>{
+    const fileName=`categore-${uuidv4()}-${Date.now()}.jpeg`
+    console.log(req.file.buffer)
+    sharp(req.file.buffer).resize(600,600)
+    .toFormat("jpeg")
+    .jpeg({quality:90})
+    .toFile(`uploads/categore/${fileName}`)
+    req.body.image=fileName;
+    next();
+
+
+
+
+})
 
 const getCategore=factory.getAll(categoreModel)
 
@@ -117,6 +169,10 @@ module.exports= {getCategore,
     createCategore,
     getSpecificCategore,
     updateCategore,
-    deleteCategore
+    deleteCategore,
+    uploadCategoreImage,
+    reasizeImage,
+
+    
 
 };

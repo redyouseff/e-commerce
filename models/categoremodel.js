@@ -21,6 +21,23 @@ const categoreSchema=new mongoose.Schema({
 }
 ,{ timestamps:true})
 
+const setImageUrl=(doc)=>{
+    if(doc.image){
+
+ 
+    const imageUrl=`${process.env.BASE_URL}/categore/${doc.image}`
+    doc.image=imageUrl
+}
+}
+//execute after findone findall update 
+categoreSchema.post("init",(doc)=>{
+    setImageUrl(doc)
+
+})
+categoreSchema.post("save",(doc)=>{
+    setImageUrl(doc)
+})
+
 
 const categoreModel=new mongoose.model("categore",categoreSchema)
 

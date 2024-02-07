@@ -3,9 +3,87 @@ const asyncHandler = require('express-async-handler')
 const slugify=require("slugify")
 const appError =require("../utils/apiError")
 const factory=require("./handlersFactory")
-
 const { query } = require("express")
 const apiFeatures = require("../utils/apiFeatures")
+const {uploadMixedImage}=require("../middleware/uploadImage")
+
+// const multer  = require('multer')
+// const { v4: uuidv4 } = require('uuid');
+// const sharp =require("sharp")
+
+
+// const multerStorage=multer.memoryStorage(); 
+
+// const multerFilter=(req,file,cb)=>{
+//      if(file.mimetype.startsWith("image")){
+//         cb(null,true)
+//     }
+//     else{
+//         cb(new appError("only imaged allowed",400),false)
+//     }
+// }
+
+// const upload=multer({ storage : multerStorage  ,fileFilter:multerFilter})
+
+
+
+// const uploadProductImage=  upload.fields([
+//     {
+//         name:"imageCover",
+//         maxCount:1
+//     },
+//     {
+//         name:"images",
+//         maxCount: 5
+//     }
+// ])
+
+const uploadProductImage=  uploadMixedImage([
+    {
+        name:"imageCover",
+        maxCount:1
+    },
+    {
+        name:"images",
+        maxCount: 5
+    }
+])
+const reasizeImage=asyncHandler( async (req,res,next)=>{
+  if(req.files.imageCover){
+    const fileName=`product-${uuidv4()}-${Date.now()}.jpeg`
+   await  sharp(req.files.imageCover[0].buffer).resize(2000,1333)
+    .toFormat("jpeg")
+    .jpeg({quality:90})
+    .toFile(`uploads/product/${fileName}`)
+    req.body.imageCover=fileName;
+
+  }
+  if(req.files.images){
+    req.body.images=[];
+    await Promise.all(
+    req.files.images.map( async(img,index)=>{
+        const fileName=`product-${uuidv4()}-${Date.now()}-${index + 1}.jpeg`
+        await sharp(img.buffer).resize(2000,1333)
+         .toFormat("jpeg")
+         .jpeg({quality:90})
+         .toFile(`uploads/product/${fileName}`)
+        req.body.images.push(fileName)
+
+    })
+   )
+   
+
+  }
+  next();
+ 
+   
+
+
+}
+
+)
+
+
 
 
 const getProduct=factory.getAll(productModel)
@@ -169,5 +247,7 @@ module.exports= {
     getSpecificProduct,
     updateProduct,
     deleteProduct,
+    uploadProductImage,
+    reasizeImage
 
 };

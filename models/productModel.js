@@ -84,6 +84,35 @@ const productSchema=new mongoose.Schema({
 
         next();
       });
+
+      const setImageUrl=(doc)=>{
+        if(doc.imageCover){
+        const imageUrl=`${process.env.BASE_URL}/product/${doc.image}` 
+        doc.imageCover=imageUrl
+        doc.imageCover=imageUrl
+
+    }
+    if(doc.images){
+        const images=[]
+        doc.images.forEach((image,index)=>{
+            const imageUrl=`${process.env.BASE_URL}/product/${image}` 
+            images.push(imageUrl)
+
+        })
+
+        doc.images=images
+    }
+
+    }
+    //execute after findone findall update 
+    productSchema.post("init",(doc)=>{
+        setImageUrl(doc)
+    
+    })
+    //excute on create
+    productSchema.post("save",(doc)=>{
+        setImageUrl(doc)
+    })
       
 
     const productModel=new mongoose.model("product",productSchema)

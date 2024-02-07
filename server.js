@@ -3,6 +3,7 @@ const app =express();
 const dotenv=require("dotenv");
 const { env } = require("process");
 const morgan=require("morgan")
+const bodyParser = require('body-parser')
 const dbConnection=require("./config/dbConnection")
 const categoreRoute=require("./routes/categoreRoute")
 const subCategoreRoute=require("./routes/subCategoreRouter")
@@ -11,8 +12,10 @@ const productRoute=require("./routes/productRoute")
 const appError =require("./utils/apiError")
 const globelError=require("./middleware/globelError");
 const { error } = require("console");
+const path = require("path");
 
-
+app.use(express.static(path.join(__dirname,"uploads")))
+app.use(bodyParser.urlencoded({ extended: false }))
 dotenv.config({path:"config.env"})
 app.use(express.json())
 
@@ -34,7 +37,6 @@ const server= app.listen(process.env.PORT,(req,res)=>{
     console.log("app listened on port 3000")
     
 }) 
-
 
 //route
 app.use("/api/v1/categore",categoreRoute)

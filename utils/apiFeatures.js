@@ -4,6 +4,7 @@ class apiFeatures {
     constructor(queryStringObject,mongooseQuery){
         this.queryStringObject=queryStringObject;
         this.mongooseQuery=mongooseQuery;
+     
       
 
     }
@@ -16,7 +17,8 @@ class apiFeatures {
     let quearyString=JSON.stringify(quearyStr);
     quearyString=quearyString.replace(/\b(gte|gt|lte|lt)\b/g,(match)=>`$${match}`)
     this.mongooseQuery=this.mongooseQuery.find(JSON.parse(quearyString))
-    console.log(this.queryStringObject)
+  
+  
     return this
     }
     
@@ -33,6 +35,7 @@ class apiFeatures {
     
     
         }
+       
         return this ;
 
     }
@@ -47,6 +50,7 @@ class apiFeatures {
             this.mongooseQuery=this.mongooseQuery.select(fields);
            
         }
+        
         return this;
     }
 
@@ -68,19 +72,21 @@ class apiFeatures {
         return this ;
     }
     paginate(countDocuments){
-        const padge=this.queryStringObject.padge |1;
-        const limit =this.mongooseQuery.limit | 5;
+      
+        const padge=this.queryStringObject.padge*1;
+        const limit =this.queryStringObject.limit*1||5;
+        console.log(padge,limit)
         const skip =(padge - 1) * limit
         const endIndex=padge * limit
-        const pagination={};
+        let pagination={};
         pagination.currentPadge=padge;
         pagination.limit=limit;
         pagination.numberOfPadge=(Math.ceil(countDocuments / limit))
         if(endIndex<countDocuments){
-            pagination.next=padge + 1
+            pagination.next=(padge + 1)
         }
         if(skip>0){
-            pagination.prev=padge - 1;
+            pagination.prev=(padge - 1)
 
         }
         this.paginationRedult=pagination
