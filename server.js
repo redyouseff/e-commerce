@@ -9,10 +9,13 @@ const categoreRoute=require("./routes/categoreRoute")
 const subCategoreRoute=require("./routes/subCategoreRouter")
 const brandRoute=require("./routes/brandRoute")
 const productRoute=require("./routes/productRoute")
+const userRoute=require("./routes/userRoute")
 const appError =require("./utils/apiError")
+const signupRoute=require("./routes/authRoute")
 const globelError=require("./middleware/globelError");
 const { error } = require("console");
 const path = require("path");
+const { signup } = require("./services/authService");
 
 app.use(express.static(path.join(__dirname,"uploads")))
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -43,6 +46,9 @@ app.use("/api/v1/categore",categoreRoute)
 app.use("/api/v1/subCategore",subCategoreRoute)
 app.use("/api/v1/brand",brandRoute)
 app.use("/api/v1/product",productRoute)
+app.use("/api/v1/user",userRoute)
+app.use("/api/v1/auth",signupRoute)
+
 
 
 app.use("*",(req,res,next)=>{

@@ -1,3 +1,4 @@
+const apiError=require("../utils/apiError")
 const globelError=(err,req,res,next)=>{
     
     err.statusCode=err.statusCode || 500;
@@ -6,11 +7,14 @@ const globelError=(err,req,res,next)=>{
         sendErrorForDev(err,res)
     }
     else{
+        if(err.name=="JsonWebTokenError")  err=hanleInvalidSignature()
+        if(err.name=="TokenExpiredError")  err=new apiError("expired token ",4004)
         sendErrorForProd(err,res)
     }
 
     
 }
+const hanleInvalidSignature=()=>new apiError("invalid token",404)
 
 const  sendErrorForDev=(err,res)=>{
     res.status(err.statusCode).json({

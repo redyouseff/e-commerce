@@ -3,17 +3,18 @@ const {createBrand, updateBrand,deleteBrand,getSpecificBrand, getBrand,uploadBra
 const router=express.Router();
 const { getbrandValidator,deletebrandValidator,updatebrandValidator, createbrandValidator} =require("../utils/validator/brandVlidator")
 const { param, validationResult } = require('express-validator');
+const{protect,allowedTo}=require("../services/authService")
 
 
 
 router.route("/").get(getBrand)
-.post(uploadBrandImage,reasizeImage,createbrandValidator,createBrand)
+.post(protect,allowedTo("admin","manger"),uploadBrandImage,reasizeImage,createbrandValidator,createBrand)
 
 router.route("/:id").get(getbrandValidator,getSpecificBrand)
 
-.put(uploadBrandImage,reasizeImage,updatebrandValidator,updateBrand)
+.put(protect,allowedTo("admin","manger"),uploadBrandImage,reasizeImage,updatebrandValidator,updateBrand)
 
-.delete(deletebrandValidator,deleteBrand)
+.delete(protect,allowedTo("admin"),deletebrandValidator,deleteBrand)
 
 ;
 

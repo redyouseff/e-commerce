@@ -9,17 +9,18 @@ const {getCategoreValidator, createCategoreValidator, deleteCategoreValidator, u
 const { param, validationResult } = require('express-validator');
 const subCategoreRouter=require("./subCategoreRouter")
 const {uploadCategoreImage}=require("../services/categoreService")
+const{protect,allowedTo}=require("../services/authService")
 
 router.route("/").get(getCategore)
-.post(uploadCategoreImage,reasizeImage, createCategoreValidator,createCategore)
+.post(protect,allowedTo("admin","manger"),uploadCategoreImage,reasizeImage, createCategoreValidator,createCategore)
 
 router.use("/:categoreId/subCategore",subCategoreRouter)
 
 router.route("/:id").get(getCategoreValidator,getSpecificCategore)
 
-.put(uploadCategoreImage,reasizeImage,updateCategoreValidator,updateCategore)
+.put(protect,allowedTo("admin","manger"),uploadCategoreImage,reasizeImage,updateCategoreValidator,updateCategore)
 
-.delete(deleteCategoreValidator,deleteCategore)
+.delete(protect,allowedTo("admin"),deleteCategoreValidator,deleteCategore)
 
 ;
 

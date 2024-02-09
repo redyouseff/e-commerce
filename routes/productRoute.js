@@ -3,18 +3,18 @@ const { getProduct,createProduct,getSpecificProduct,updateProduct, deleteProduct
 const router=express.Router();
 const {getProductValidator, createProductValidator, deleteProductValidator, updateProductValidator} =require("../utils/validator/productVlidator")
 const { param, validationResult } = require('express-validator');
-
+const{protect,allowedTo}=require("../services/authService")
 
 
 
 router.route("/").get(getProduct)
-.post(uploadProductImage,reasizeImage,createProductValidator,createProduct)
+.post(protect,allowedTo("admin","manger"),uploadProductImage,reasizeImage,createProductValidator,createProduct)
 
 router.route("/:id").get(getProductValidator,getSpecificProduct)
 
-.put(uploadProductImage,reasizeImage,updateProductValidator,updateProduct)
+.put(protect,allowedTo("admin","manger"),uploadProductImage,reasizeImage,updateProductValidator,updateProduct)
 
-.delete(deleteProductValidator,deleteProduct)
+.delete(protect,allowedTo("admin"),deleteProductValidator,deleteProduct)
 
 ;
 
