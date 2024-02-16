@@ -35,11 +35,12 @@ const login=asyncHandler(async(req,res,next)=>{
     const user = await userModel.findOne({email: req.body.email})
 
     
-   
+    
 
     if(!user || !(await bcrypt.compare(req.body.password , user.password))){
         return next(new appError("email or password are not correct"))
     }
+    
 
     const token= createToken(user._id)
 
@@ -53,6 +54,7 @@ let token;
 
 if(req.headers.authorization&&req.headers.authorization.startsWith("Bearer")){
     token =req.headers.authorization.split(" ")[1]
+ 
 }
 
 if(!token){

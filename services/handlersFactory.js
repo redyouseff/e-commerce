@@ -9,14 +9,20 @@ const deletOne=(model)=>{
   return  asyncHandler(async(req,res,next)=>{
         const id =req.params.id
     
-        try{
+      
             const document = await model.findByIdAndDelete(id)
+            if(!document){
+                return next (new appError(`not founded document on id ${id}`,400))
+
+            }
+                document.remove()
+         
             res.status(200).json("document deleted")
-        }
-        catch{
-            return next (new appError(`not founded document on id ${id}`,400))
     
-        }
+       
+          
+    
+        
         
        
     
@@ -29,6 +35,7 @@ const deletOne=(model)=>{
             try{
                 const cat = await model.findByIdAndUpdate(req.params.id,req.body,
                 {new:true})
+                cat.save();
                 res.status(200).json({data:cat})
         
             }
@@ -54,19 +61,24 @@ const deletOne=(model)=>{
       
       })
     }
-    const getOne=(model)=>{
+    const getOne=(model,populatetionOptions)=>{
         return  asyncHandler(async(req,res,next)=>{
 
+        
+          
+                let document =  model.findById(req.params.id)
+                if(populatetionOptions){
+                    document= document.populate(populatetionOptions)
+                }
+                    
+                   const result= await document;
+           
+                if(!result){
+                    req.status(400).json({messega:"error on finding this id"})
+                }
+                        
+                res.status(200).json({data:result})
             
-            try{
-                const categore = await model.findById(req.params.id);
-                res.status(200).json({data:categore})
-            
-            }
-            catch{
-                return next (new appError(`not faund subcategore in id ${req.params.id}`,400))
-                
-            }
             
             
             
@@ -77,8 +89,9 @@ const deletOne=(model)=>{
     const getAll=(model)=>{
         return  asyncHandler( async(req,res)=>{
             filter={}
-            if(req.filterObject){
-                filter=req.filterObject
+            if(req.filter){
+                filter=req.filter
+                
             }
             const countDocuments=await model.countDocuments()
             const queryStringObject={...req.query}

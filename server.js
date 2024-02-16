@@ -12,6 +12,9 @@ const productRoute=require("./routes/productRoute")
 const userRoute=require("./routes/userRoute")
 const appError =require("./utils/apiError")
 const signupRoute=require("./routes/authRoute")
+const reveiwRoute=require("./routes/reviewRoute")
+const wishlistRoute=require("./routes/wishlistRoute")
+const addressRoute=require("./routes/addressRoute")
 const globelError=require("./middleware/globelError");
 const { error } = require("console");
 const path = require("path");
@@ -48,6 +51,9 @@ app.use("/api/v1/brand",brandRoute)
 app.use("/api/v1/product",productRoute)
 app.use("/api/v1/user",userRoute)
 app.use("/api/v1/auth",signupRoute)
+app.use("/api/v1/review",reveiwRoute)
+app.use("/api/v1/wishlist",wishlistRoute)
+app.use("/api/v1/address",addressRoute)
 
 
 

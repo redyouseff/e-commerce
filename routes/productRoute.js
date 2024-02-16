@@ -4,8 +4,10 @@ const router=express.Router();
 const {getProductValidator, createProductValidator, deleteProductValidator, updateProductValidator} =require("../utils/validator/productVlidator")
 const { param, validationResult } = require('express-validator');
 const{protect,allowedTo}=require("../services/authService")
+const ReviewRoute=require("./reviewRoute")
 
 
+router.use("/:productId/review",ReviewRoute)
 
 router.route("/").get(getProduct)
 .post(protect,allowedTo("admin","manger"),uploadProductImage,reasizeImage,createProductValidator,createProduct)

@@ -72,7 +72,17 @@ const productSchema=new mongoose.Schema({
 }
 
 
-    ,{timestamps:true})
+    ,{timestamps:true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    })
+
+
+    productSchema.virtual("review",{
+        ref:"review",
+        foreignField:"product",
+        localField:"_id"
+    })
 
 
     //mongoose middleware

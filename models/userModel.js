@@ -43,7 +43,21 @@ const userSchema=mongoose.Schema({
     },
     passwordResetCode:String,
     passwordResetExpires:Date,
-    passwordResetVerified:Boolean
+    passwordResetVerified:Boolean,
+
+    wishlist:[{
+        type:mongoose.Schema.ObjectId,
+        ref:"product"
+    }],
+    
+    addresses:[{
+        id:{type:mongoose.Schema.Types.ObjectId},
+        alias:String,
+        details:String,
+        phone:String,
+        city:String,
+        postalCode:String
+    }]
 
 
  

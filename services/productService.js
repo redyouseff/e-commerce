@@ -170,7 +170,7 @@ const createProduct=factory.createOne(productModel)
 // })
 
 
-const getSpecificProduct=factory.getOne(productModel)
+const getSpecificProduct=factory.getOne(productModel,"review")
 
 // const getSpecificProduct = asyncHandler(async(req,res,next)=>{
 
