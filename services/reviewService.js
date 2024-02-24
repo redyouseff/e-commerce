@@ -18,7 +18,7 @@ const setFilter=(req,res,next)=>{
        filter={product:req.params.productId}
      
    }
-   req.filter=filter;
+   req.filterObj=filter;
    next();
    
 }

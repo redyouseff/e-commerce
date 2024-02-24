@@ -15,7 +15,7 @@ const deletOne=(model)=>{
                 return next (new appError(`not founded document on id ${id}`,400))
 
             }
-                document.remove()
+              
          
             res.status(200).json("document deleted")
     
@@ -89,10 +89,12 @@ const deletOne=(model)=>{
     const getAll=(model)=>{
         return  asyncHandler( async(req,res)=>{
             filter={}
-            if(req.filter){
-                filter=req.filter
-                
+            
+            if(req.filterObj){
+                filter=req.filterObj 
             }
+            
+         
             const countDocuments=await model.countDocuments()
             const queryStringObject={...req.query}
                 const Features=new apiFeatures(queryStringObject,model.find(filter))
@@ -102,6 +104,8 @@ const deletOne=(model)=>{
                 .search()
                 .limitFields()
                 .sort()
+
+                
                 
                 const {paginationRedult,mongooseQuery}=Features
                 const product  =await mongooseQuery

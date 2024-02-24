@@ -10,6 +10,7 @@ const addProductToWishlist=asyncHandler(async(req,res,next)=>{
         $addToSet:{wishlist:req.body.productId}
     },
     {new:true})
+   
 
     res.status(200).json({status:"success",
 message:"product added to your wishlist",
