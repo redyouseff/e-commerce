@@ -129,8 +129,9 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
 const webhookCheckout=asyncHandler(async(req,res,next)=>{
     const sig = req.headers['stripe-signature'];
     console.log("on function")
-      console.log(sign)
+    
         console.log(typeof(req.body))
+        let event;
   
     try {
       event = stripe.webhooks.constructEvent(req.body, sig,'whsec_9qynp8dFIUUz5ITn9n0aZuxmv5WeWigP');
