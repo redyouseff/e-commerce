@@ -134,7 +134,7 @@ const webhookCheckout=asyncHandler(async(req,res,next)=>{
         let event;
   
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig,'whsec_9qynp8dFIUUz5ITn9n0aZuxmv5WeWigP');
+      event = stripe.webhooks.constructEvent(req.body, sig,whsec_9qynp8dFIUUz5ITn9n0aZuxmv5WeWigP);
     } catch (err) {
         console.log("error")
        
