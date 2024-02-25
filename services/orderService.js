@@ -94,7 +94,6 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
     }
     const cartPrice= cart.totalPriceAfterDiscount?cart.totalPriceAfterDiscount:cart.totalPrice
     const totalOrderPrice=cartPrice
-    console.log(cart)
     const session = await stripe.checkout.sessions.create({
         line_items:[
             {
@@ -128,7 +127,7 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
 
 const webhookCheckout=asyncHandler(async(req,res,next)=>{
     const sig = req.headers['stripe-signature'];
-
+    console.log("on function")
     let event;
   
     try {
