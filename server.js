@@ -24,6 +24,7 @@ const globelError=require("./middleware/globelError");
 const { error } = require("console");
 const path = require("path");
 const { signup } = require("./services/authService");
+const {webhookCheckout}=require("./services/orderService")
 
 //to allow other domain access this domin 
 app.use(cors())
@@ -32,13 +33,14 @@ app.options('*', cors())
 //compress all response
 app.use(compression())
 
+
 app.use(express.static(path.join(__dirname,"uploads")))
 app.use(bodyParser.urlencoded({ extended: false }))
 dotenv.config({path:"config.env"})
 app.use(express.json())
 
 if(process.env.NODE_ENV=="development"){
-    // app.use(morgan("dev"))
+    app.use(morgan("dev"))
     console.log(`mode is ${process.env.NODE_ENV}`)
 }
 
@@ -68,6 +70,8 @@ const server= app.listen(process.env.PORT,(req,res)=>{
 // app.use("/api/v1/address",addressRoute)
 // app.use("/api/v1/coupon",couponRoute)
 
+
+app.post("/webhookCheckout", express.raw({type: 'application/json'}),webhookCheckout)
 mountRoutes(app);
 
 

@@ -92,9 +92,9 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
     if(!cart){
         return next(new appError(`no cart for this id ${req.params.cartId}`))
     }
-    const cartPrice= cart.totalPriceAfterDiscount?cart.totalOrderPrice:cart.totalPrice
+    const cartPrice= cart.totalPriceAfterDiscount?cart.totalPriceAfterDiscount:cart.totalPrice
     const totalOrderPrice=cartPrice
-    console.l
+    console.log(cart)
     const session = await stripe.checkout.sessions.create({
         line_items:[
             {
@@ -119,10 +119,29 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
         metadata: req.body.shippingAddress
      
     })
+   
     
     res.status(200).json({session:session})
 
 
+})
+
+const webhookCheckout=asyncHandler(async(req,res,next)=>{
+    const sig = req.headers['stripe-signature'];
+
+    let event;
+  
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_KEY);
+    } catch (err) {
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+    if(event == "checkout.session.completed"){
+        console.log("order is ready to pay ...............................")
+    }
+  
+    
 })
 
 
@@ -134,6 +153,7 @@ module.exports={
     getSpecificOrder,
     updateOrderToPaid,
     updateOrderToDelivered,
-    checkoutSession
+    checkoutSession,
+    webhookCheckout
 
 }
