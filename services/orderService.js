@@ -8,6 +8,7 @@ const { updateOne } = require("../models/couponModel")
 const factory=require("./handlersFactory")
 const { strip } = require("colors")
 const { sign } = require("jsonwebtoken")
+const userModel = require("../models/userModel")
 const stripe = require('stripe')('sk_test_51On9sTAB4crm8DAcDGfCMs7rpq1YyBz9z0ENMdiae2hl2k9JteJMTJOnJm45mgh0EOsnHkPRaMdAWLUuSDEa5xf200CR8uf7Wq')
 const createCashOrder=asyncHandler(async(req,res,next)=>{
     const taxPrice=0;
@@ -126,25 +127,56 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
 
 })
 
+
+const createCardOrder=async(session)=>{
+    const cartId=session.client_reference_id;
+    const shippingAddress =session.metadata;
+    const orderPrice = session.amount_total / 100;
+    const cart =await cartModel.findById(cartId);
+    const user=await userModel.findOne({email:session.customer_email})
+    console.log(cartId,shippingAddress,orderPrice,cart,user)
+
+
+    const order=await orderModel.create({
+        user:user._id,
+        cartItems:cart.cartItems,
+        shippingAddress,
+        totalPrice:orderPrice,
+        isPaid:true,
+        paidAt:Date.now(),
+        paymentMethodType:"card",
+
+
+    })
+    cart.cartItems.map(async(item)=>{
+        await productModel.findByIdAndUpdate(item.product,{
+            $inc:{quantity: -item.quantity,sold: + item.quantity}
+        })
+
+    })
+
+
+}
+
 const webhookCheckout=asyncHandler(async(req,res,next)=>{
     const sig = req.headers['stripe-signature'];
-    console.log("on f")
-    
-        console.log(typeof(req.body))
         let event;
   
     try {
       event = stripe.webhooks.constructEvent(req.body, sig,"whsec_9qynp8dFIUUz5ITn9n0aZuxmv5WeWigP");
     } catch (err) {
-        console.log("error")
-       
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
     if(event.type == "checkout.session.completed"){
         console.log("order is ready to pay ...............................")
+        createCardOrder(event.data.object)
+
     }
-    console.log("order is ready to pay ...............................")
+
+
+
+   
 
   
     
