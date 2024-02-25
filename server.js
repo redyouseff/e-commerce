@@ -34,7 +34,7 @@ app.options('*', cors())
 //compress all response
 app.use(compression())
 
-
+app.post("/webhookCheckout",express.raw(),webhookCheckout)
 app.use(express.static(path.join(__dirname,"uploads")))
 app.use(bodyParser.urlencoded({ extended: false }))
 dotenv.config({path:"config.env"})
@@ -72,7 +72,7 @@ const server= app.listen(process.env.PORT,(req,res)=>{
 // app.use("/api/v1/coupon",couponRoute)
 
 
-app.post("/webhookCheckout",express.raw(),webhookCheckout)
+
 mountRoutes(app);
 
 
