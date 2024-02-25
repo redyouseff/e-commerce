@@ -28,13 +28,17 @@ const {webhookCheckout}=require("./services/orderService");
 const { type } = require("os");
 
 //to allow other domain access this domin 
+app.post("/webhookCheckout",express.raw({type: 'application/json'}),webhookCheckout)
+
+
 app.use(cors())
 app.options('*', cors())
 
 //compress all response
 app.use(compression())
 
-app.post("/webhookCheckout",express.raw(),webhookCheckout)
+
+
 app.use(express.static(path.join(__dirname,"uploads")))
 app.use(bodyParser.urlencoded({ extended: false }))
 dotenv.config({path:"config.env"})
