@@ -152,7 +152,7 @@ const createCardOrder=async(session)=>{
 
     })
     
-    await cart.findByIdAndDelete(req.params.cartId)
+    await cart.findByIdAndDelete(cartId)
     console.log("deleted")
 
 
