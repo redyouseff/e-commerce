@@ -134,10 +134,11 @@ const webhookCheckout=asyncHandler(async(req,res,next)=>{
     try {
       event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_KEY);
     } catch (err) {
+        console.log("error")
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
-    if(event == "checkout.session.completed"){
+    if(event.type == "checkout.session.completed"){
         console.log("order is ready to pay ...............................")
     }
   
