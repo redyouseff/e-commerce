@@ -7,6 +7,7 @@ const productModel=require("../models/productModel")
 const { updateOne } = require("../models/couponModel")
 const factory=require("./handlersFactory")
 const { strip } = require("colors")
+const { sign } = require("jsonwebtoken")
 const stripe = require('stripe')('sk_test_51On9sTAB4crm8DAcDGfCMs7rpq1YyBz9z0ENMdiae2hl2k9JteJMTJOnJm45mgh0EOsnHkPRaMdAWLUuSDEa5xf200CR8uf7Wq')
 const createCashOrder=asyncHandler(async(req,res,next)=>{
     const taxPrice=0;
@@ -128,7 +129,7 @@ const checkoutSession=asyncHandler(async(req,res,next)=>{
 const webhookCheckout=asyncHandler(async(req,res,next)=>{
     const sig = req.headers['stripe-signature'];
     console.log("on function")
-      
+      console.log(sign)
         console.log(typeof(req.body))
   
     try {

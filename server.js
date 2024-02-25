@@ -24,7 +24,8 @@ const globelError=require("./middleware/globelError");
 const { error } = require("console");
 const path = require("path");
 const { signup } = require("./services/authService");
-const {webhookCheckout}=require("./services/orderService")
+const {webhookCheckout}=require("./services/orderService");
+const { type } = require("os");
 
 //to allow other domain access this domin 
 app.use(cors())
@@ -70,8 +71,8 @@ const server= app.listen(process.env.PORT,(req,res)=>{
 // app.use("/api/v1/address",addressRoute)
 // app.use("/api/v1/coupon",couponRoute)
 
-app.use(express.raw({ type: '*/*' }));
-app.post("/webhookCheckout",webhookCheckout)
+
+app.post("/webhookCheckout",express.raw({type:'application/json'}),webhookCheckout)
 mountRoutes(app);
 
 
