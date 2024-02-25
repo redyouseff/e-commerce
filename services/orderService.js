@@ -134,9 +134,6 @@ const createCardOrder=async(session)=>{
     const orderPrice = session.amount_total / 100;
     const cart =await cartModel.findById(cartId);
     const user=await userModel.findOne({email:session.customer_email})
-    console.log(cartId,shippingAddress,orderPrice,cart,user)
-
-
     const order=await orderModel.create({
         user:user._id,
         cartItems:cart.cartItems,
@@ -154,6 +151,9 @@ const createCardOrder=async(session)=>{
         })
 
     })
+    
+    await cart.findByIdAndDelete(req.params.cartId)
+    console.log("deleted")
 
 
 }
