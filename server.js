@@ -72,7 +72,7 @@ const server= app.listen(process.env.PORT,(req,res)=>{
 // app.use("/api/v1/coupon",couponRoute)
 
 
-app.post("/webhookCheckout",express.raw({type:'application/json'}),webhookCheckout)
+app.post("/webhookCheckout",express.raw(),webhookCheckout)
 mountRoutes(app);
 
 
