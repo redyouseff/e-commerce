@@ -74,7 +74,7 @@ const deletOne=(model)=>{
                    const result= await document;
            
                 if(!result){
-                    req.status(400).json({messega:"error on finding this id"})
+                    res.status(400).json({messega:"error on finding this id"})
                 }
                         
                 res.status(200).json({data:result})
